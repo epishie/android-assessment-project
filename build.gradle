@@ -13,6 +13,7 @@ buildscript {
         supportLibraryVersion = '1.6.1'
         recyclerView = '1.2.1'
         constraintLayout = '2.1.4'
+        swipeRefreshLayout = '1.1.0'
         retrofit = '2.9.0'
         lifecycle = '2.2.0'
         gson = '2.10.1'

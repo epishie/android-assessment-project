@@ -51,6 +51,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$rootProject.recyclerView"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
     implementation "com.google.android.material:material:$rootProject.supportLibraryVersion"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$rootProject.swipeRefreshLayout"
 
     //api
     api "com.squareup.retrofit2:retrofit:$rootProject.retrofit"

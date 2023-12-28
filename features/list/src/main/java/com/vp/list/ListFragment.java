@@ -12,6 +12,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     private GridPagingScrollListener gridPagingScrollListener;
     private ListAdapter listAdapter;
     private ViewAnimator viewAnimator;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private TextView errorTextView;
@@ -58,6 +61,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         recyclerView = view.findViewById(R.id.recyclerView);
         viewAnimator = view.findViewById(R.id.viewAnimator);
         progressBar = view.findViewById(R.id.progressBar);
@@ -69,6 +73,7 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
 
         initBottomNavigation(view);
         initList();
+        initSwipeRefresh();
         listViewModel.observeMovies().observe(this, searchResult -> {
             if (searchResult != null) {
                 handleResult(listAdapter, searchResult);
@@ -105,12 +110,19 @@ public class ListFragment extends Fragment implements GridPagingScrollListener.L
         recyclerView.addOnScrollListener(gridPagingScrollListener);
     }
 
+    private void initSwipeRefresh() {
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            swipeRefreshLayout.setRefreshing(false);
+            listViewModel.searchMoviesByTitle(currentQuery, 1);
+        });
+    }
+
     private void showProgressBar() {
         viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(progressBar));
     }
 
     private void showList() {
-        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(recyclerView));
+        viewAnimator.setDisplayedChild(viewAnimator.indexOfChild(swipeRefreshLayout));
     }
 
     private void showError() {
