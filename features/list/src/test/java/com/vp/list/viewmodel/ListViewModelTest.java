@@ -3,6 +3,7 @@ package com.vp.list.viewmodel;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.Observer;
 
+import com.vp.list.model.ListItem;
 import com.vp.list.model.SearchResponse;
 import com.vp.list.service.SearchService;
 
@@ -10,6 +11,8 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.mock.Calls;
 
@@ -52,6 +55,30 @@ public class ListViewModelTest {
 
         //then
         verify(mockObserver).onChanged(SearchResult.inProgress());
+    }
+
+    @Test
+    public void shouldReturnSuccessState() {
+        // given
+        List<ListItem> search = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            search.add(mock());
+        }
+        SearchResponse searchResponse = mock(SearchResponse.class);
+        when(searchResponse.getSearch()).thenReturn(search);
+        when(searchResponse.getTotalResults()).thenReturn(search.size());
+        SearchService searchService = mock(SearchService.class);
+        when(searchService.search(anyString(), anyInt())).thenReturn(Calls.response(searchResponse));
+        ListViewModel listViewModel = new ListViewModel(searchService);
+        Observer<SearchResult> mockObserver = (Observer<SearchResult>) mock(Observer.class);
+        listViewModel.observeMovies().observeForever(mockObserver);
+
+        //when
+        listViewModel.searchMoviesByTitle("title", 1);
+
+        //then
+        verify(mockObserver).onChanged(SearchResult.inProgress());
+        verify(mockObserver).onChanged(SearchResult.success(search, 10));
     }
 
 }
