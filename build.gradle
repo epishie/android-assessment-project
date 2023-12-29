@@ -10,6 +10,7 @@ buildscript {
 
         //dependencies
         kotlin = '1.8.0'
+        coroutines = '1.3.9'
         supportLibraryVersion = '1.6.1'
         recyclerView = '1.2.1'
         constraintLayout = '2.1.4'
@@ -20,6 +21,10 @@ buildscript {
         dagger = '2.44.2'
         glide = '4.10.0'
         okhttp = '4.10.0'
+        room = '2.5.2'
+        mockito = '4.11.0'
+        assertj = '3.24.2'
+        core = '2.1.0'
     }
 
     repositories {

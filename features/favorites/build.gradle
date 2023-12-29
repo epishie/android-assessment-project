@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -20,20 +22,46 @@ android {
             minifyEnabled true
         }
     }
+    buildFeatures {
+        viewBinding true
+    }
     namespace 'com.vp.favorites'
 
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':dagger.addons')
+    implementation project(':database')
 
-    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
+    //architecture components
+    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$rootProject.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
 
     //support
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
+    implementation "androidx.recyclerview:recyclerview:$rootProject.recyclerView"
+    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
+
+    //glide
+    implementation "com.github.bumptech.glide:glide:$rootProject.glide"
+    kapt "com.github.bumptech.glide:compiler:$rootProject.glide"
+
+    //dagger
+    implementation "com.google.dagger:dagger:$rootProject.dagger"
+    kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
+    implementation "com.google.dagger:dagger-android:$rootProject.dagger"
+    implementation("com.google.dagger:dagger-android-support:$rootProject.dagger")
+    kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
 
     //tests
     testImplementation 'junit:junit:4.13.2'
+    testImplementation "org.mockito:mockito-core:$rootProject.mockito"
+    testImplementation "org.mockito:mockito-inline:$rootProject.mockito"
+    testImplementation "org.assertj:assertj-core:$rootProject.assertj"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$rootProject.coroutines"
+    testImplementation "androidx.arch.core:core-testing:$rootProject.core"
     androidTestImplementation 'androidx.test:runner:1.5.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }

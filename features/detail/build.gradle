@@ -38,6 +38,7 @@ android {
 
 dependencies {
     implementation project(':dagger.addons')
+    implementation project(':database')
     implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayout"
     implementation 'org.jetbrains.kotlin:kotlin-reflect:1.8.0'
@@ -52,6 +53,7 @@ dependencies {
 
     //architecture components
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
 
     //dagger
     implementation "com.google.dagger:dagger:$rootProject.dagger"
@@ -61,6 +63,10 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
 
     testImplementation 'junit:junit:4.13.2'
+    testImplementation "org.mockito:mockito-core:$rootProject.mockito"
+    testImplementation "org.mockito:mockito-inline:$rootProject.mockito"
+    testImplementation "org.assertj:assertj-core:$rootProject.assertj"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$rootProject.coroutines"
     androidTestImplementation 'androidx.test:runner:1.5.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
