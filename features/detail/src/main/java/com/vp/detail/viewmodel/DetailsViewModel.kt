@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vp.detail.DetailActivity
 import com.vp.detail.model.DetailRepository
 import com.vp.detail.model.MovieDetail
 import com.vp.detail.service.DetailService
@@ -33,10 +32,9 @@ class DetailsViewModel @Inject constructor(
 
     fun isFavorite(): LiveData<Boolean> = isFavorite
 
-    fun fetchDetails() {
+    fun fetchDetails(movieId: String) {
         loadingState.value = LoadingState.IN_PROGRESS
-        val imdbId = DetailActivity.queryProvider.getMovieId()
-        detailService.getMovie(imdbId).enqueue(object : Callback, retrofit2.Callback<MovieDetail> {
+        detailService.getMovie(movieId).enqueue(object : Callback, retrofit2.Callback<MovieDetail> {
             override fun onResponse(call: Call<MovieDetail>?, response: Response<MovieDetail>?) {
                 details.postValue(response?.body())
 
@@ -53,25 +51,23 @@ class DetailsViewModel @Inject constructor(
             }
         })
         viewModelScope.launch(Dispatchers.Main.immediate) {
-            detailRepository.getFavoriteMovieState(imdbId)
+            detailRepository.getFavoriteMovieState(movieId)
                 .collect {
                     isFavorite.value = it
                 }
         }
     }
 
-    fun setFavorite() {
-        val imdbId = DetailActivity.queryProvider.getMovieId()
+    fun setFavorite(movieId: String) {
         val details = details.value ?: return
         viewModelScope.launch {
-            detailRepository.saveFavoriteMovie(imdbId, details.poster)
+            detailRepository.saveFavoriteMovie(movieId, details.poster)
         }
     }
 
-    fun unsetFavorite() {
-        val imdbId = DetailActivity.queryProvider.getMovieId()
+    fun unsetFavorite(movieId: String) {
         viewModelScope.launch {
-            detailRepository.removeFavoriteMovie(imdbId)
+            detailRepository.removeFavoriteMovie(movieId)
         }
     }
 

@@ -13,21 +13,25 @@ import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 import kotlin.run
 
-class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
+class DetailActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     private lateinit var detailViewModel: DetailsViewModel
+    private lateinit var movieId: String
     private var isFavorite: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        movieId = intent?.data?.getQueryParameter("imdbID") ?: run {
+            throw IllegalStateException("You must provide movie id to display details")
+        }
+
         val binding: ActivityDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
         detailViewModel = ViewModelProviders.of(this, factory).get(DetailsViewModel::class.java)
         binding.viewModel = detailViewModel
-        queryProvider = this
         binding.setLifecycleOwner(this)
-        detailViewModel.fetchDetails()
+        detailViewModel.fetchDetails(movieId)
         detailViewModel.title().observe(this, Observer {
             supportActionBar?.title = it
         })
@@ -58,9 +62,9 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         return when (item.itemId) {
             R.id.star -> {
                 if (isFavorite) {
-                    detailViewModel.unsetFavorite()
+                    detailViewModel.unsetFavorite(movieId)
                 } else {
-                    detailViewModel.setFavorite()
+                    detailViewModel.setFavorite(movieId)
                 }
                 true
             }
@@ -68,13 +72,4 @@ class DetailActivity : DaggerAppCompatActivity(), QueryProvider {
         }
     }
 
-    override fun getMovieId(): String {
-        return intent?.data?.getQueryParameter("imdbID") ?: run {
-            throw IllegalStateException("You must provide movie id to display details")
-        }
-    }
-
-    companion object {
-        lateinit var queryProvider: QueryProvider
-    }
 }
