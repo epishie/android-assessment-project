@@ -33,6 +33,16 @@
             android:text="@string/data_loading_error" />
     </ViewAnimator>
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/nextPageProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:trackColor="@color/colorAccent"
+        app:trackThickness="6dp" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"

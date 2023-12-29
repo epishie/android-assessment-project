@@ -35,6 +35,7 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener 
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private lateinit var errorTextView: TextView
+    private lateinit var nextPageProgressBar: ProgressBar
     private var currentQuery: String = "Interview"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,6 +59,7 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener 
         viewAnimator = view.findViewById(R.id.viewAnimator)
         progressBar = view.findViewById(R.id.progressBar)
         errorTextView = view.findViewById(R.id.errorText)
+        nextPageProgressBar = view.findViewById(R.id.nextPageProgressBar)
 
         if (savedInstanceState != null) {
             savedInstanceState.getString(CURRENT_QUERY)?.let {
@@ -151,6 +153,7 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener 
             ListState.ERROR -> showError()
         }
         gridPagingScrollListener.markLoading(false)
+        nextPageProgressBar.visibility = View.GONE
     }
 
     private fun setItemsData(listAdapter: ListAdapter, searchResult: SearchResult) {
@@ -167,6 +170,7 @@ class ListFragment : Fragment(), GridPagingScrollListener.LoadMoreItemsListener 
 
     override fun loadMoreItems(page: Int) {
         gridPagingScrollListener.markLoading(true)
+        nextPageProgressBar.visibility = View.VISIBLE
         listViewModel.searchMoviesByTitle(currentQuery, page)
     }
 
